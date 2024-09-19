@@ -1,5 +1,6 @@
 package com.modsen.bookservice.services.impl;
 
+import com.modsen.bookservice.contollers.clients.LibraryClient;
 import com.modsen.bookservice.core.dto.BookAddingDTO;
 import com.modsen.bookservice.core.dto.BookDTO;
 import com.modsen.bookservice.core.mappers.BookMapper;
@@ -21,10 +22,13 @@ public class BookService implements IBookService {
 
     private final BookMapper bookMapper;
 
+    private final LibraryClient libraryClient;
+
     @Autowired
-    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper, LibraryClient libraryClient) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
+        this.libraryClient = libraryClient;
     }
 
     @Override
@@ -59,6 +63,8 @@ public class BookService implements IBookService {
         }
 
         Book book = bookRepository.save(bookMapper.addingDtoToEntity(bookAddingDTO));
+
+        libraryClient.addBookInventory(bookMapper.entityToInventoryAddingDto(book));
 
         return bookMapper.entityToDto(book);
     }
