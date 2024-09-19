@@ -1,3 +1,16 @@
 spring:
   application:
     name: library-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/books
+    username: api
+    password: api
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: public
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 0
