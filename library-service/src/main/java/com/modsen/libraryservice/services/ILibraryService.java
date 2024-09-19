@@ -1,13 +1,14 @@
 package com.modsen.libraryservice.services;
 
-import com.modsen.libraryservice.entities.BookInventory;
+import com.modsen.libraryservice.core.dto.BookInventoryAddingDTO;
+import com.modsen.libraryservice.core.dto.BookInventoryDTO;
 
 import java.util.List;
 
 public interface ILibraryService {
-    BookInventory addBookInventory(BookInventory bookInventoryAddingDTO);
+    BookInventoryDTO addBookInventory(BookInventoryAddingDTO bookInventoryAddingDTO);
 
-    List<BookInventory> getAvailableBookInventory();
+    List<BookInventoryDTO> getAvailableBookInventory();
 
-    BookInventory updateBookInventory(BookInventory bookInventoryDTO);
+    BookInventoryDTO updateBookInventory(BookInventoryDTO bookInventoryDTO);
 }
