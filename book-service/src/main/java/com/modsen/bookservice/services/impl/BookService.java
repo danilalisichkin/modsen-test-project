@@ -5,6 +5,7 @@ import com.modsen.bookservice.core.dto.BookDTO;
 import com.modsen.bookservice.core.mappers.BookMapper;
 import com.modsen.bookservice.dao.repository.BookRepository;
 import com.modsen.bookservice.entities.Book;
+import com.modsen.bookservice.exceptions.BadRequestException;
 import com.modsen.bookservice.exceptions.ResourceNotFoundException;
 import com.modsen.bookservice.services.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,10 @@ public class BookService implements IBookService {
 
     @Override
     public BookDTO saveBook(BookAddingDTO bookAddingDTO) {
+        if (bookRepository.findByIsbn(bookAddingDTO.getIsbn()).isPresent()) {
+            throw new BadRequestException("Book with isbn=%s already exists", bookAddingDTO.getIsbn());
+        }
+
         Book book = bookRepository.save(bookMapper.addingDtoToEntity(bookAddingDTO));
 
         return bookMapper.entityToDto(book);
