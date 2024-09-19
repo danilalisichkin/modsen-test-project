@@ -1,20 +1,21 @@
 package com.modsen.bookservice.services;
 
-import com.modsen.bookservice.entities.Book;
+import com.modsen.bookservice.core.dto.BookAddingDTO;
+import com.modsen.bookservice.core.dto.BookDTO;
 
 import java.util.List;
 
 public interface IBookService {
 
-    List<Book> getAllBooks();
+    List<BookDTO> getAllBooks();
 
-    Book getBookById(Long id);
+    BookDTO getBookById(Long id);
 
-    Book getBookByISBN(String isbn);
+    BookDTO getBookByISBN(String isbn);
 
-    Book saveBook(Book bookDTO);
+    BookDTO saveBook(BookAddingDTO bookDTO);
 
-    Book updateBook(Book bookDTO);
+    BookDTO updateBook(BookDTO bookDTO);
 
-    void deleteBook(Book bookDTO);
+    void deleteBook(BookDTO bookDTO);
 }
