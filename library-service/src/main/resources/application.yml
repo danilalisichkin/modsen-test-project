@@ -12,5 +12,7 @@ spring:
       hibernate:
         default_schema: public
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsaWJyYXJ5LXNlcnZpY2UiLCJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTUxMzkyMDAsImV4cCI6MTY5NTE0MjgwMCwiYXVkIjoibGlicmFyeS1zZXJ2aWNlIn0.XcMx0SXBv6Kw8r1wqeJZpPVHgITovPv7mlymg6F-1mc"
 server:
   port: 0
