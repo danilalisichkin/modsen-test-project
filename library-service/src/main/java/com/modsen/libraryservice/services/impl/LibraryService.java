@@ -49,6 +49,10 @@ public class LibraryService implements ILibraryService {
 
     @Override
     public BookInventoryDTO updateBookInventory(BookInventoryDTO bookInventoryDTO) {
+        if (bookInventoryRepository.findById(bookInventoryDTO.getId()).isEmpty()) {
+            throw new ResourceNotFoundException("Book inventory with id=%s not found", bookInventoryDTO.getId());
+        }
+
         BookInventory bookInventory = bookInventoryMapper.dtoToEntity(bookInventoryDTO);
 
         return bookInventoryMapper.entityToDto(bookInventoryRepository.save(bookInventory));
