@@ -3,6 +3,9 @@ package com.modsen.libraryservice.api;
 import com.modsen.libraryservice.core.dto.BookInventoryAddingDTO;
 import com.modsen.libraryservice.core.dto.BookInventoryDTO;
 import com.modsen.libraryservice.services.ILibraryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/library")
+@SecurityRequirement(name = "token")
+@Tag(name="BookInventoryController", description="Provides CRU-operations with book inventory and getting available books")
 public class BookInventoryApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -32,6 +37,7 @@ public class BookInventoryApiController {
     }
 
     @PostMapping
+    @Operation(summary = "Add/save new", description = "Allows to save new book inventory")
     public ResponseEntity<BookInventoryDTO> addBookInventory(
             @Valid @RequestBody BookInventoryAddingDTO bookInventoryAddingDTO) {
 
@@ -43,6 +49,7 @@ public class BookInventoryApiController {
     }
 
     @GetMapping("/available")
+    @Operation(summary = "Get available", description = "Allows to get a list of available books")
     public ResponseEntity<List<BookInventoryDTO>> getAvailableBookInventory() {
         logger.info("Sending available book inventories");
 
@@ -52,6 +59,7 @@ public class BookInventoryApiController {
     }
 
     @PutMapping
+    @Operation(summary = "Update", description = "Allows to update data of existing book inventory")
     public ResponseEntity<BookInventoryDTO> updateBookInventory(@Valid @RequestBody BookInventoryDTO bookInventoryDTO) {
         logger.info("Updating book inventory information for book with id={}", bookInventoryDTO.getBookId());
 
