@@ -19,7 +19,18 @@ spring:
             allowedHeaders:
               - "*"
       routes:
-
+        - id: book-service-route
+          uri: lb://book-service/
+          predicates:
+            - Path=/book-service/**
+          filters:
+            - StripPrefix=1
+        - id: library-service-route
+          uri: lb://library-service/
+          predicates:
+            - Path=/library-service/**
+          filters:
+            - StripPrefix=1
 server:
   port: 8080
 eureka:
