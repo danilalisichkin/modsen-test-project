@@ -3,6 +3,9 @@ package com.modsen.bookservice.contollers.api;
 import com.modsen.bookservice.core.dto.BookAddingDTO;
 import com.modsen.bookservice.core.dto.BookDTO;
 import com.modsen.bookservice.services.IBookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -24,6 +27,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
+@SecurityRequirement(name = "token")
+@Tag(name="BookController", description="Provides CRUD-operations with books and getting by isbn")
 public class BookApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,6 +41,7 @@ public class BookApiController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all", description = "Allows to get all existing books")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         logger.info("Sending all books");
 
@@ -45,6 +51,7 @@ public class BookApiController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get by id", description = "Allows to get book by its id")
     public ResponseEntity<BookDTO> getBookById(@NotNull @PathVariable Long id) {
         logger.info("Sending book with id={}", id);
 
@@ -54,6 +61,7 @@ public class BookApiController {
     }
 
     @GetMapping("/isbn/{isbn}")
+    @Operation(summary = "Get by ISBN", description = "Allows to get book by its isbn")
     public ResponseEntity<BookDTO> getBookByISBN(
             @Pattern(regexp = "^(?:\\d{9}X|\\d{10}|\\d{13})$")
             @PathVariable String isbn) {
@@ -66,6 +74,7 @@ public class BookApiController {
     }
 
     @PostMapping
+    @Operation(summary = "Add/save new", description = "Allows to save new book")
     public ResponseEntity<BookDTO> saveBook(@Valid @RequestBody BookAddingDTO bookAddingDTO) {
         logger.info("Saving book with ISBN={}", bookAddingDTO.getIsbn());
 
@@ -75,6 +84,7 @@ public class BookApiController {
     }
 
     @PutMapping
+    @Operation(summary = "Update", description = "Allows to update data of existing book")
     public ResponseEntity<BookDTO> updateBook(@Valid @RequestBody BookDTO bookDTO) {
         logger.info("Updating book with id={}", bookDTO.getId());
 
@@ -84,6 +94,7 @@ public class BookApiController {
     }
 
     @DeleteMapping
+    @Operation(summary = "Delete", description = "Allows to delete existing book")
     public ResponseEntity<Void> deleteBook(@Valid @RequestBody BookDTO bookDTO) {
         logger.info("Deleting book with id={}", bookDTO.getId());
 
