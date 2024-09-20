@@ -1,3 +1,28 @@
 spring:
   application:
     name: book-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/books
+    username: api
+    password: api
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: public
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJib29rLXNlcnZpY2UiLCJuYW1lIjoiYW5vbnltb3VzIiwicm9sZSI6Imd1ZXN0IiwiaWF0IjoxNjk1MTM5MjAwLCJhdWQiOiJib29rLXNlcnZpY2UifQ.xIhXTAn0gu_fW7bGmzP2RbGaTPfQaZZ4o3JxXY-FRVE"
+server:
+  port: 0
+  forward-headers-strategy: framework
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
