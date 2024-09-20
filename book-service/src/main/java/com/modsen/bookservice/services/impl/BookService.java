@@ -34,7 +34,7 @@ public class BookService implements IBookService {
     @Override
     public List<BookDTO> getAllBooks() {
         return bookRepository.findAll().stream()
-                .map(book -> bookMapper.entityToDto(book))
+                .map(bookMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
