@@ -1,0 +1,51 @@
+version: '3'
+services:
+  postgres:
+    build: database
+    image: database:1.0.0
+    ports:
+      - "5432:5432"
+
+
+  eureka-server:
+    build: eureka-server
+    image: eureka-server:1.0.0
+    ports:
+      - "8761:8761"
+
+
+  api-gateway:
+    build: api-gateway
+    image: api-gateway:1.0.0
+    depends_on:
+      - eureka-server
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+
+  book-service:
+    build: book-service
+    image: book-service:1.0.0
+    depends_on:
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/books
+      - SPRING_DATASOURCE_USERNAME=api
+      - SPRING_DATASOURCE_PASSWORD=api
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - OPENAPI_URL=http://api-gateway:8080/
+
+
+  library-service:
+    build: library-service
+    image: library-service:1.0.0
+    depends_on:
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/library
+      - SPRING_DATASOURCE_USERNAME=api
+      - SPRING_DATASOURCE_PASSWORD=api
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - OPENAPI_URL=http://api-gateway:8080/
