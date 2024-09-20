@@ -1,4 +1,4 @@
-package com.modsen.libraryservice.impl;
+package com.modsen.libraryservice.services.impl;
 
 import com.modsen.libraryservice.core.dto.BookInventoryAddingDTO;
 import com.modsen.libraryservice.core.dto.BookInventoryDTO;
@@ -6,7 +6,6 @@ import com.modsen.libraryservice.core.mappers.BookInventoryMapper;
 import com.modsen.libraryservice.entities.BookInventory;
 import com.modsen.libraryservice.exceptions.ResourceNotFoundException;
 import com.modsen.libraryservice.repository.BookInventoryRepository;
-import com.modsen.libraryservice.services.impl.LibraryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -62,7 +61,7 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void whenAddBookInventory_thenReturnBookInventoryDTO() {
+    void whenAddValidBookInventory_thenReturnBookInventoryDTO() {
         when(bookInventoryMapper.addingDtoToEntity(bookInventoryAddingDTO)).thenReturn(bookInventory);
         when(bookInventoryRepository.save(bookInventory)).thenReturn(bookInventory);
         when(bookInventoryMapper.entityToDto(bookInventory)).thenReturn(bookInventoryDTO);
@@ -90,15 +89,22 @@ public class LibraryServiceTest {
     }
 
     @Test
-    void whenNoAvailableBookInventory_thenThrowNotFound() {
-        when(bookInventoryRepository.findByBorrowedAtIsNullOrReturnByBefore(any(LocalDateTime.class)))
-                .thenReturn(Collections.emptyList());
+    void whenUpdateExistingBookInventory_thenReturnBookInventoryDTO() {
+        when(bookInventoryRepository.findById(1l)).thenReturn(Optional.of(bookInventory));
+        when(bookInventoryMapper.dtoToEntity(bookInventoryDTO)).thenReturn(bookInventory);
+        when(bookInventoryRepository.save(bookInventory)).thenReturn(bookInventory);
+        when(bookInventoryMapper.entityToDto(bookInventory)).thenReturn(bookInventoryDTO);
 
-        assertThrows(ResourceNotFoundException.class, () -> libraryService.getAvailableBookInventory());
+        BookInventoryDTO returnedDTO = libraryService.updateBookInventory(bookInventoryDTO);
+
+        assertNotNull(returnedDTO);
+        assertEquals(bookInventoryDTO, returnedDTO);
     }
 
     @Test
-    void whenUpdateBookInventory_thenThrowNotFound() {
+    void whenUpdateNotExistingBookInventory_thenThrowNotFound() {
+        when(bookInventoryRepository.findById(1l)).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> libraryService.updateBookInventory(bookInventoryDTO));
     }
 }
