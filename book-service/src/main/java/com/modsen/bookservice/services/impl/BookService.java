@@ -71,6 +71,10 @@ public class BookService implements IBookService {
 
     @Override
     public BookDTO updateBook(BookDTO bookDTO) {
+        if (bookRepository.findById(bookDTO.getId()).isEmpty()) {
+            throw new ResourceNotFoundException("Book with id=%s not found", bookDTO.getId());
+        }
+
         return bookMapper.entityToDto(
                 bookRepository.save(bookMapper.dtoToEntity(bookDTO))
         );
