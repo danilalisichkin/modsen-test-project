@@ -1,3 +1,50 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - "*"
+      routes:
+        - id: book-service-route
+          uri: lb://book-service/
+          predicates:
+            - Path=/book-service/**
+          filters:
+            - StripPrefix=1
+        - id: library-service-route
+          uri: lb://library-service/
+          predicates:
+            - Path=/library-service/**
+          filters:
+            - StripPrefix=1
+server:
+  port: 8080
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+springdoc:
+  swagger-ui:
+    urls:
+      - name: book-service
+        url: /book-service/v3/api-docs
+      - name: library-service
+        url: /library-service/v3/api-docs
+api-docs:
+  path: /v3/api-docs
+swagger-ui:
+  path: /swagger-ui.html
