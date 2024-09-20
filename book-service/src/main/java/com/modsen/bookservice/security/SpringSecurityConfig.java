@@ -43,7 +43,7 @@ public class SpringSecurityConfig {
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(request -> request
                 .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
-                .requestMatchers("/api/v1/book/**").authenticated()
+                .requestMatchers("/api/v1/books/**").authenticated()
         );
 
         return http.build();
