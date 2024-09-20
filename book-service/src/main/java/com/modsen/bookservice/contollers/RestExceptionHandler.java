@@ -1,6 +1,7 @@
 package com.modsen.bookservice.contollers;
 
 import com.modsen.bookservice.exceptions.BadRequestException;
+import com.modsen.bookservice.exceptions.DataUniquenessConflictException;
 import com.modsen.bookservice.exceptions.ExceptionMessage;
 import com.modsen.bookservice.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,14 +26,14 @@ public class RestExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class})
-    public ResponseEntity<Object> handleNotFoundException(ResourceNotFoundException e) {
+    public ResponseEntity<Object> handleNotFoundException(Throwable e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionMessage(e.getMessage(), "resource not found"));
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
+    @ExceptionHandler({MissingServletRequestParameterException.class, BadRequestException.class})
+    public ResponseEntity<Object> handleBadRequestException(Throwable e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionMessage(e.getMessage(), "bad request"));
@@ -50,14 +51,9 @@ public class RestExceptionHandler {
 
         String cause = "invalid input provided: " + errorMap;
 
-        ExceptionMessage exceptionMessage = ExceptionMessage.builder()
-                .message("validation error")
-                .cause(cause)
-                .build();
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(exceptionMessage);
+                .body(new ExceptionMessage(cause,"validation error"));
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
@@ -87,9 +83,17 @@ public class RestExceptionHandler {
                 .body(new ExceptionMessage("the service is temporarily unavailable, please try later again", "internal server error"));
     }
 
+    @ExceptionHandler({DataIntegrityViolationException.class, DataUniquenessConflictException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ExceptionMessage("data with the same unique field already exists, please use other value", "data uniqueness conflict"));
+    }
+
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<Object> handleOtherException(Throwable e) {
         logger.error("Internal server error", e);
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionMessage("if the error persists, please contact developers", "internal server error"));

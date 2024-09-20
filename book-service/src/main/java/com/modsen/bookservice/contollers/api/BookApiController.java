@@ -84,7 +84,7 @@ public class BookApiController {
     }
 
     @PutMapping
-    @Operation(summary = "Update", description = "Allows to update data of existing book")
+    @Operation(summary = "Update", description = "Allows to update data of existing book. Note, that update of id is not allowed")
     public ResponseEntity<BookDTO> updateBook(@Valid @RequestBody BookDTO bookDTO) {
         logger.info("Updating book with id={}", bookDTO.getId());
 
