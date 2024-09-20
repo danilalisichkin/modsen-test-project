@@ -1,4 +1,4 @@
-package com.modsen.libraryservice.api;
+package com.modsen.libraryservice.controllers.api;
 
 import com.modsen.libraryservice.core.dto.BookInventoryAddingDTO;
 import com.modsen.libraryservice.core.dto.BookInventoryDTO;
