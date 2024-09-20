@@ -93,12 +93,12 @@ public class BookApiController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedBookDTO);
     }
 
-    @DeleteMapping
-    @Operation(summary = "Delete", description = "Allows to delete existing book")
-    public ResponseEntity<Void> deleteBook(@Valid @RequestBody BookDTO bookDTO) {
-        logger.info("Deleting book with id={}", bookDTO.getId());
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete", description = "Allows to delete existing book by its id")
+    public ResponseEntity<Void> deleteBook(@NotNull @PathVariable Long id) {
+        logger.info("Deleting book with id={}", id);
 
-        bookService.deleteBook(bookDTO);
+        bookService.deleteBookById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -77,7 +77,10 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void deleteBook(BookDTO bookDTO) {
-        bookRepository.delete(bookMapper.dtoToEntity(bookDTO));
+    public void deleteBookById(Long id) {
+        if (bookRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Book with id=%s not found", id);
+        }
+        bookRepository.deleteById(id);
     }
 }
