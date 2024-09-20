@@ -38,10 +38,6 @@ public class LibraryService implements ILibraryService {
     public List<BookInventoryDTO> getAvailableBookInventory() {
         List<BookInventory> availableBooks = bookInventoryRepository.findByBorrowedAtIsNullOrReturnByBefore(LocalDateTime.now());
 
-        if (availableBooks.isEmpty()) {
-            throw new ResourceNotFoundException("No available books found");
-        }
-
         return availableBooks.stream()
                 .map(bookInventoryMapper::entityToDto)
                 .collect(Collectors.toList());
