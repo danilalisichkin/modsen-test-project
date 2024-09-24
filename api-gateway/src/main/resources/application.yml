@@ -25,12 +25,21 @@ spring:
             - Path=/book-service/**
           filters:
             - StripPrefix=1
+            - SecurityFilter
         - id: library-service-route
           uri: lb://library-service/
           predicates:
             - Path=/library-service/**
           filters:
             - StripPrefix=1
+            - SecurityFilter
+        - id: library-service-route
+          uri: lb://authentication-service/
+          predicates:
+            - Path=/authentication-service/**
+          filters:
+            - StripPrefix=1
+            - SecurityFilter
 server:
   port: 8080
 eureka:
@@ -44,6 +53,8 @@ springdoc:
         url: /book-service/v3/api-docs
       - name: library-service
         url: /library-service/v3/api-docs
+      - name: authentication-service
+        url: /authentication-service/v3/api-docs
 api-docs:
   path: /v3/api-docs
 swagger-ui:
