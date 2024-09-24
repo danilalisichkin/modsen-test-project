@@ -33,7 +33,8 @@ public class SpringSecurityConfig {
                                 response.setStatus(HttpServletResponse.SC_FORBIDDEN))));
 
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/api/v1/authentications/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/webjars/**").permitAll()
+                .requestMatchers("/api/v1/authentication/**").permitAll()
         );
 
         return http.build();
