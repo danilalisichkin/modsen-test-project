@@ -3,7 +3,8 @@ package com.modsen.authenticationservice.controllers.api;
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
 import com.modsen.authenticationservice.serices.IAuthenticationService;
-import com.modsen.authenticationservice.serices.impl.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/authentication")
+@Tag(name = "AuthenticationController", description = "Provides operations for user authentication, validation of jwt-tokens")
 public class AuthenticationApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -33,7 +35,8 @@ public class AuthenticationApiController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> addNewUser(@Valid @RequestBody UserRegisterDTO registerDTO) {
+    @Operation(summary = "Register", description = "Allows user to register")
+    public ResponseEntity<String> registerNewUser(@Valid @RequestBody UserRegisterDTO registerDTO) {
         logger.info("Registering new user with name={}", registerDTO.getUsername());
 
         authenticationService.saveUser(registerDTO);
@@ -42,6 +45,7 @@ public class AuthenticationApiController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login", description = "Allows user to login, take token")
     public ResponseEntity<String> getToken(@Valid @RequestBody UserLoginDTO loginDTO) {
         logger.info("Authenticating user with name={}", loginDTO.getUsername());
 
@@ -54,6 +58,7 @@ public class AuthenticationApiController {
     }
 
     @GetMapping("/validate")
+    @Operation(summary = "Validate token", description = "Allows to validate jwt token, is using by others application microservices")
     public ResponseEntity<String> validateToken(@NotNull @NotEmpty @RequestParam("token") String token) {
         logger.info("Validating token={}", token);
 
