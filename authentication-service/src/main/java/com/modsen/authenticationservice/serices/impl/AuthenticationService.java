@@ -5,6 +5,7 @@ import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
 import com.modsen.authenticationservice.core.mappers.UserMapper;
 import com.modsen.authenticationservice.dao.repository.UserCredentialRepository;
 import com.modsen.authenticationservice.entities.UserCredential;
+import com.modsen.authenticationservice.exceptions.DataUniquenessConflictException;
 import com.modsen.authenticationservice.serices.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     private final JwtService jwtService;
 
-    private final UserCredentialRepository repository;
+    private final UserCredentialRepository credentialRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -27,9 +28,9 @@ public class AuthenticationService implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationService(JwtService jwtService, UserCredentialRepository repository, PasswordEncoder passwordEncoder, UserMapper userMapper, AuthenticationManager authenticationManager) {
+    public AuthenticationService(JwtService jwtService, UserCredentialRepository credentialRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, AuthenticationManager authenticationManager) {
         this.jwtService = jwtService;
-        this.repository = repository;
+        this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
@@ -38,9 +39,14 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public void saveUser(UserRegisterDTO registerDTO) {
         UserCredential credential = userMapper.registerDtoToCredential(registerDTO);
+
+        if (credentialRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
+            throw new DataUniquenessConflictException();
+        }
+
         credential.setPassword(passwordEncoder.encode(credential.getPassword()));
 
-        repository.save(credential);
+        credentialRepository.save(credential);
     }
 
     @Override
