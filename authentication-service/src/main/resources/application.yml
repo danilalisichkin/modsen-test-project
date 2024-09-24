@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: authentication-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/users
+    username: api
+    password: api
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: public
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 0
+  forward-headers-strategy: framework
+jwt:
+  access:
+    secret: SECRET
+    expiration: 10 #mins
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
