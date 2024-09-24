@@ -4,7 +4,7 @@ import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
 
 public interface IAuthenticationService {
-    String saveUser(UserRegisterDTO registerDTO);
+    void saveUser(UserRegisterDTO registerDTO);
 
     boolean authenticateUser(UserLoginDTO loginDTO);
 
