@@ -3,7 +3,7 @@ package com.modsen.authenticationservice.serices;
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
 
-public interface AuthenticationService {
+public interface IAuthenticationService {
     String saveUser(UserRegisterDTO registerDTO);
 
     boolean authenticateUser(UserLoginDTO loginDTO);
