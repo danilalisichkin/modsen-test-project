@@ -2,12 +2,14 @@ package com.modsen.authenticationservice.controllers.api;
 
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
+import com.modsen.authenticationservice.serices.IAuthenticationService;
 import com.modsen.authenticationservice.serices.impl.AuthenticationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +25,10 @@ public class AuthenticationApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final AuthenticationService authenticationService;
+    private final IAuthenticationService authenticationService;
 
-    public AuthenticationApiController(AuthenticationService authenticationService) {
+    @Autowired
+    public AuthenticationApiController(IAuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 

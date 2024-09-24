@@ -7,6 +7,7 @@ import com.modsen.authenticationservice.dao.repository.UserCredentialRepository;
 import com.modsen.authenticationservice.entities.UserCredential;
 import com.modsen.authenticationservice.exceptions.DataUniquenessConflictException;
 import com.modsen.authenticationservice.serices.IAuthenticationService;
+import com.modsen.authenticationservice.serices.IJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService implements IAuthenticationService {
 
-    private final JwtService jwtService;
+    private final IJwtService jwtService;
 
     private final UserCredentialRepository credentialRepository;
 
@@ -28,7 +29,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationService(JwtService jwtService, UserCredentialRepository credentialRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, AuthenticationManager authenticationManager) {
+    public AuthenticationService(IJwtService jwtService, UserCredentialRepository credentialRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, AuthenticationManager authenticationManager) {
         this.jwtService = jwtService;
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
