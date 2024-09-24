@@ -3,7 +3,7 @@
 CREATE TABLE public.user_credentials (
                                        id bigint NOT NULL,
                                        username character varying(100) NOT NULL,
-                                       password character varying(100) NOT NULL,
+                                       password character varying(100) NOT NULL
 );
 
 ALTER TABLE public.user_credentials OWNER TO api;
