@@ -1,4 +1,4 @@
-package com.modsen.libraryservice.controllers.api;
+package com.modsen.libraryservice.controllers;
 
 import com.modsen.libraryservice.exceptions.BadRequestException;
 import com.modsen.libraryservice.exceptions.DataUniquenessConflictException;

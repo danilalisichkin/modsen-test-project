@@ -6,19 +6,16 @@ import com.modsen.libraryservice.core.mappers.BookInventoryMapper;
 import com.modsen.libraryservice.entities.BookInventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 public class BookInventoryMapperTest {
 
-    @Autowired
     private BookInventoryMapper bookInventoryMapper;
 
     private BookInventory bookInventory;
@@ -27,17 +24,22 @@ public class BookInventoryMapperTest {
 
     @BeforeEach
     void setUp() {
+        bookInventoryMapper = Mappers.getMapper(BookInventoryMapper.class);
+
+        LocalDateTime borrowTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime returnTime = LocalDateTime.now().plusDays(1);
+
         bookInventory = BookInventory.builder()
                 .id(1L)
                 .bookId(1L)
-                .borrowedAt(LocalDateTime.now().minusDays(1))
-                .returnBy(LocalDateTime.now().plusDays(1))
+                .borrowedAt(borrowTime)
+                .returnBy(returnTime)
                 .build();
         bookInventoryDTO = BookInventoryDTO.builder()
                 .id(1L)
                 .bookId(1L)
-                .borrowedAt(LocalDateTime.now().minusDays(1))
-                .returnBy(LocalDateTime.now().plusDays(1))
+                .borrowedAt(borrowTime)
+                .returnBy(returnTime)
                 .build();
         bookInventoryAddingDTO = BookInventoryAddingDTO.builder()
                 .bookId(1L)
@@ -60,10 +62,7 @@ public class BookInventoryMapperTest {
         BookInventoryDTO convertedDTO = bookInventoryMapper.entityToDto(bookInventory);
 
         assertNotNull(convertedDTO);
-        assertEquals(bookInventory.getId(), convertedDTO.getId());
-        assertEquals(bookInventory.getBookId(), convertedDTO.getBookId());
-        assertEquals(bookInventory.getBorrowedAt(), convertedDTO.getBorrowedAt());
-        assertEquals(bookInventory.getReturnBy(), convertedDTO.getReturnBy());
+        assertEquals(bookInventoryDTO, convertedDTO);
     }
 
     @Test
@@ -71,10 +70,10 @@ public class BookInventoryMapperTest {
         BookInventory convertedEntity = bookInventoryMapper.dtoToEntity(bookInventoryDTO);
 
         assertNotNull(convertedEntity);
-        assertEquals(bookInventoryDTO.getId(), convertedEntity.getId());
-        assertEquals(bookInventoryDTO.getBookId(), convertedEntity.getBookId());
-        assertEquals(bookInventoryDTO.getBorrowedAt(), convertedEntity.getBorrowedAt());
-        assertEquals(bookInventoryDTO.getReturnBy(), convertedEntity.getReturnBy());
+        assertEquals(bookInventory.getId(), convertedEntity.getId());
+        assertEquals(bookInventory.getBookId(), convertedEntity.getBookId());
+        assertEquals(bookInventory.getBorrowedAt(), convertedEntity.getBorrowedAt());
+        assertEquals(bookInventory.getReturnBy(), convertedEntity.getReturnBy());
     }
 
     @Test

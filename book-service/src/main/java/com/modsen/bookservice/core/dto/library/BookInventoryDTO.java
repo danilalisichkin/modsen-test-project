@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@EqualsAndHashCode
 @Schema(description = "Entry to get/update/delete book in library inventory")
 public class BookInventoryDTO {
 
