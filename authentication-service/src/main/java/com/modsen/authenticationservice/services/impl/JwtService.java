@@ -1,6 +1,6 @@
-package com.modsen.authenticationservice.serices.impl;
+package com.modsen.authenticationservice.services.impl;
 
-import com.modsen.authenticationservice.serices.IJwtService;
+import com.modsen.authenticationservice.services.IJwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

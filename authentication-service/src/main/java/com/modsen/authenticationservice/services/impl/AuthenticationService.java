@@ -1,4 +1,4 @@
-package com.modsen.authenticationservice.serices.impl;
+package com.modsen.authenticationservice.services.impl;
 
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
@@ -6,8 +6,8 @@ import com.modsen.authenticationservice.core.mappers.UserMapper;
 import com.modsen.authenticationservice.dao.repository.UserCredentialRepository;
 import com.modsen.authenticationservice.entities.UserCredential;
 import com.modsen.authenticationservice.exceptions.DataUniquenessConflictException;
-import com.modsen.authenticationservice.serices.IAuthenticationService;
-import com.modsen.authenticationservice.serices.IJwtService;
+import com.modsen.authenticationservice.services.IAuthenticationService;
+import com.modsen.authenticationservice.services.IJwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

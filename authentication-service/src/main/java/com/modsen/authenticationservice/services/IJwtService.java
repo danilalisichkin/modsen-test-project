@@ -1,4 +1,4 @@
-package com.modsen.authenticationservice.serices;
+package com.modsen.authenticationservice.services;
 
 public interface IJwtService {
     void validateToken(String token);
