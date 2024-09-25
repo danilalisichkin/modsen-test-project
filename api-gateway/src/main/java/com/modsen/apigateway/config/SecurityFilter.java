@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
     private final AuthenticationClient authenticationClient;
 
     @Autowired
-    public SecurityFilter(RouteValidator validator, AuthenticationClient authenticationClient) {
+    public SecurityFilter(RouteValidator validator, @Lazy AuthenticationClient authenticationClient) {
         this.validator = validator;
         this.authenticationClient = authenticationClient;
     }
