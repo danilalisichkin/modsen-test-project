@@ -17,7 +17,6 @@ server:
   forward-headers-strategy: framework
 jwt:
   access:
-    secret: SECRET
     expiration: 10 #mins
 eureka:
   client:
