@@ -5,14 +5,15 @@ import jakarta.ws.rs.NotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
-@Configuration
+@Component
 public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.Config> {
     private final RouteValidator validator;
 
@@ -30,7 +31,7 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
             if (validator.isSecured.test((ServerHttpRequest) exchange.getRequest())) {
 
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    throw new RuntimeException("missing authorization header");
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "missing authorization header");
                 }
 
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
@@ -40,7 +41,7 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
 
                 ResponseEntity<String> response = authenticationClient.validateToken(authHeader);
                 if (!response.getBody().equals("token valid") || !response.getStatusCode().equals(HttpStatus.OK)) {
-                    throw new NotAuthorizedException("un authorized access to application");
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "un authorized access to application");
                 }
             }
             return chain.filter(exchange);
@@ -48,6 +49,6 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
     }
 
     public static class Config {
-
+ 
     }
 }
