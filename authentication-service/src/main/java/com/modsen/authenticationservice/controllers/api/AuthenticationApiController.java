@@ -2,7 +2,7 @@ package com.modsen.authenticationservice.controllers.api;
 
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
-import com.modsen.authenticationservice.serices.IAuthenticationService;
+import com.modsen.authenticationservice.services.IAuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

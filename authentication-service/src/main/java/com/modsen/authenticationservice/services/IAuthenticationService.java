@@ -1,4 +1,4 @@
-package com.modsen.authenticationservice.serices;
+package com.modsen.authenticationservice.services;
 
 import com.modsen.authenticationservice.core.dto.UserLoginDTO;
 import com.modsen.authenticationservice.core.dto.UserRegisterDTO;
