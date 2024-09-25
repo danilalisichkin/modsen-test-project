@@ -4,7 +4,7 @@
 Данный проект был разработан в качестве тестового задания для стажировки в компании Modsen.
 
 ## Используемые технологии
-Проект написан с использованием JDK 21 и фреймворка Spring (Spring Boot, Spring DATA, Spring Security, Spring Cloud, Spring MVC). Проект представляет собой REST-API WEB-приложение, построенное по принципу MVC-модели. В качестве репозиториев использованы унаследованные от JPARepository классы. В проект добавлены объекты пересылки данных (DTO) и мапперы на основе MapStruct. Приложение включает валидацию данных, определенные исключения и их обработчик. Написаны тесты для методов мапперов, сервисов. Документация создана с помощью Swagger и Spring Open-API. Функционал API защищен Bearer-токенами с помощью Spring Security. Приложение использует PostgreSQL в качестве реляционной БД, Dockerfile и docker-compose для контейнеризации и развертывания.
+Проект написан с использованием JDK 21 и фреймворка Spring (Spring Boot, Spring DATA, Spring Security, Spring Cloud, Spring MVC). Проект представляет собой REST-API WEB-приложение, построенное по принципу MVC-модели. В качестве репозиториев использованы унаследованные от JPARepository классы. В проект добавлены объекты пересылки данных (DTO) и мапперы на основе MapStruct. Приложение включает валидацию данных, определенные исключения и их обработчик. Написаны тесты для методов мапперов, сервисов. Документация создана с помощью Swagger и Spring Open-API. Функционал API защищен JWT-токенами с помощью gateway-фильтра + Spring Security. Приложение использует PostgreSQL в качестве реляционной БД, Dockerfile и docker-compose для контейнеризации и развертывания.
 
 ## Структура приложения
 Приложение имеет микросервисную архитектуру, включающую:
@@ -22,18 +22,23 @@
     - Обновление данных об учете книги
     - Получение списка всех доступных книг
 
+- **authentication-service**: предоставляет API для аутентификации пользователей. Доступны следующие операции:
+    - Регистрация нового пользователя
+    - Аутентификация пользователя - получение jwt-токена доступа
+    - Проверка jwt-токена на валидность
+  
 - **api-gateway**
 - **eureka-server**
-- **PostgreSQL сервер** с базами данных `books` и `library`
+- **PostgreSQL сервер** с базами данных `books`, `library`, `users`
 
 ## Запуск приложения
 1. Создайте дирректорию в удобном Вам месте на Вашем компьютере.
 2. Скопируйте данный репозиторий:
    ```sh
    git clone https://github.com/danilalisichkin/modsen-test-project
-3. Перейдите внутрь директории Modsen:
+3. Перейдите внутрь директории modsen-test-project:
    ```sh
-   cd Modsen
+   cd modsen-test-project
    ```
 4. Запустите файл docker-compose.yml:
    ```sh
@@ -43,16 +48,29 @@
 
 http://localhost:8080/webjars/swagger-ui/index.html
 
-Важно: для запуска проекта порты 8080, 5432, 8761 должны быть свободны.
+Важно: для запуска проекта порты 8080, 8761, 5432 должны быть свободны.
+       порт 8080 - API-Gateway
+       порт 8761 - Eureka-сервер
+       порт 5432 - база данных PostgreSQL
 
 6. В загрузившемся окне Вы можете найти документацию по разработанному API, а также протестировать работу приложения с помощью интерактивных методов.
 
-Важно: весь функционал API защищен с помощью Bearer-токенов, поэтому при обращении к book-service используйте токен
+Важно: весь функционал API защищен с помощью jwt-токенов, поэтому перед обращением к book-service и library-service необходимо сделать следующие действия:
+- зарегистрируйтесь в приложении
+
+  обратитесь к следующему эндпоинту микросервиса аутентификации (authentication-service)
+   ```sh
+   POST api/v1/authentication/register
    ```
-   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJib29rLXNlcnZpY2UiLCJuYW1lIjoiYW5vbnltb3VzIiwicm9sZSI6Imd1ZXN0IiwiaWF0IjoxNjk1MTM5MjAwLCJhdWQiOiJib29rLXNlcnZpY2UifQ.xIhXTAn0gu_fW7bGmzP2RbGaTPfQaZZ4o3JxXY-FRVE
+  в теле запроса укажите имя пользователя и пароль, отправьте запрос
+- войдите в приложение
+
+  обратитесь к следующему эндпоинту микросервиса аутентификации (authentication-service)
+   ```sh
+   POST api/v1/authentication/login
    ```
-а к library-service
-   ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsaWJyYXJ5LXNlcnZpY2UiLCJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTUxMzkyMDAsImV4cCI6MTY5NTE0MjgwMCwiYXVkIjoibGlicmFyeS1zZXJ2aWNlIn0.XcMx0SXBv6Kw8r1wqeJZpPVHgITovPv7mlymg6F-1mc
-   ```
+  в теле запроса укажите созданные ранее имя пользователя и пароль, отправьте запрос
+- скопируйте полученный на прошлом шаге jwt-токен
+- теперь при обращении к API микросервисов добавляйте данный jwt-токен в заголовок Authorization, тем самым Вы получите доступ к API
+
 7. Все готово!
