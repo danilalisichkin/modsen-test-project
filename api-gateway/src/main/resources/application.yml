@@ -42,6 +42,7 @@ spring:
             - SecurityFilter
 server:
   port: 8080
+  forward-headers-strategy: framework
 eureka:
   client:
     serviceUrl:
