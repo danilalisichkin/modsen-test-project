@@ -9,7 +9,7 @@ spring:
           lower-case-service-id: true
       globalcors:
         corsConfigurations:
-          '[/**]':
+          '[/]':
             allowedOrigins: "*"
             allowedMethods:
               - GET
@@ -22,24 +22,24 @@ spring:
         - id: book-service-route
           uri: lb://book-service/
           predicates:
-            - Path=/book-service/**
+            - Path=/book-service/
           filters:
             - StripPrefix=1
-            - SecurityFilter
+            - name: SecurityFilter
         - id: library-service-route
           uri: lb://library-service/
           predicates:
-            - Path=/library-service/**
+            - Path=/library-service/
           filters:
             - StripPrefix=1
-            - SecurityFilter
+            - name: SecurityFilter
         - id: library-service-route
           uri: lb://authentication-service/
           predicates:
-            - Path=/authentication-service/**
+            - Path=/authentication-service/
           filters:
             - StripPrefix=1
-            - SecurityFilter
+            - name: SecurityFilter
 server:
   port: 8080
   forward-headers-strategy: framework

@@ -6,10 +6,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +20,23 @@ import java.util.Map;
 @Service
 public class JwtService implements IJwtService {
 
-    @Value("${jwt.access.secret}")
-    public static String jwtAccessSecret;
+    public SecretKey jwtAccessKey;
 
     @Value("${jwt.access.expiration}")
-    private static Integer jwtAccessExpiration;
+    private Integer jwtAccessExpiration;
+
+    @PostConstruct
+    public void init() {
+        jwtAccessKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    }
 
     @Override
     public void validateToken(String token) {
         try {
-                Jwts.parser()
-                        .setSigningKey(jwtAccessSecret)
-                        .build()
-                        .parseClaimsJws(token);
+            Jwts.parser()
+                    .setSigningKey(jwtAccessKey)
+                    .build()
+                    .parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
 
         } catch (UnsupportedJwtException e) {
@@ -51,7 +58,7 @@ public class JwtService implements IJwtService {
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtAccessExpiration * 60 * 1000))
-                .signWith(SignatureAlgorithm.HS512, jwtAccessSecret)
+                .signWith(jwtAccessKey)
                 .compact();
     }
 }

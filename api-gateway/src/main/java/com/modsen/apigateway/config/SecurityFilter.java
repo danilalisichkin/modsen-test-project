@@ -1,7 +1,6 @@
 package com.modsen.apigateway.config;
 
 import com.modsen.apigateway.controllers.clients.AuthenticationClient;
-import jakarta.ws.rs.NotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -21,6 +20,7 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
 
     @Autowired
     public SecurityFilter(RouteValidator validator, @Lazy AuthenticationClient authenticationClient) {
+        super(Config.class);
         this.validator = validator;
         this.authenticationClient = authenticationClient;
     }
@@ -49,6 +49,6 @@ public class SecurityFilter extends AbstractGatewayFilterFactory<SecurityFilter.
     }
 
     public static class Config {
- 
+
     }
 }
