@@ -6,9 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Builder
+@EqualsAndHashCode
 @Schema(description = "Entry to get/update/delete a book")
 public class BookDTO {
 
