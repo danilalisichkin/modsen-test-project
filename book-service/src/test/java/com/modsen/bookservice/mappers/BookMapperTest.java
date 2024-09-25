@@ -7,17 +7,14 @@ import com.modsen.bookservice.core.mappers.BookMapper;
 import com.modsen.bookservice.entities.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mapstruct.factory.Mappers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 public class BookMapperTest {
 
-    @Autowired
     private BookMapper bookMapper;
 
     private Book book;
@@ -27,6 +24,8 @@ public class BookMapperTest {
 
     @BeforeEach
     void setUp() {
+        bookMapper = Mappers.getMapper(BookMapper.class);
+
         book = Book.builder()
                 .id(1L)
                 .isbn("123456789")
@@ -44,11 +43,11 @@ public class BookMapperTest {
                 .author("Test Author")
                 .build();
         bookAddingDTO = BookAddingDTO.builder()
-                .isbn("987654321")
-                .title("New Title")
-                .genre("Non-Fiction")
-                .description("New Description")
-                .author("New Author")
+                .isbn("123456789")
+                .title("Test Title")
+                .genre("Fiction")
+                .description("Test Description")
+                .author("Test Author")
                 .build();
         bookInventoryAddingDTO = BookInventoryAddingDTO.builder()
                 .bookId(1L)
@@ -68,12 +67,12 @@ public class BookMapperTest {
         Book convertedEntity = bookMapper.dtoToEntity(bookDTO);
 
         assertNotNull(convertedEntity);
-        assertEquals(bookDTO.getId(), convertedEntity.getId());
-        assertEquals(bookDTO.getIsbn(), convertedEntity.getIsbn());
-        assertEquals(bookDTO.getTitle(), convertedEntity.getTitle());
-        assertEquals(bookDTO.getGenre(), convertedEntity.getGenre());
-        assertEquals(bookDTO.getDescription(), convertedEntity.getDescription());
-        assertEquals(bookDTO.getAuthor(), convertedEntity.getAuthor());
+        assertEquals(book.getId(), convertedEntity.getId());
+        assertEquals(book.getIsbn(), convertedEntity.getIsbn());
+        assertEquals(book.getTitle(), convertedEntity.getTitle());
+        assertEquals(book.getGenre(), convertedEntity.getGenre());
+        assertEquals(book.getAuthor(), convertedEntity.getAuthor());
+        assertEquals(book.getDescription(), convertedEntity.getDescription());
     }
 
     @Test
@@ -81,11 +80,12 @@ public class BookMapperTest {
         Book convertedEntity = bookMapper.addingDtoToEntity(bookAddingDTO);
 
         assertNotNull(convertedEntity);
-        assertEquals(bookAddingDTO.getIsbn(), convertedEntity.getIsbn());
-        assertEquals(bookAddingDTO.getTitle(), convertedEntity.getTitle());
-        assertEquals(bookAddingDTO.getGenre(), convertedEntity.getGenre());
-        assertEquals(bookAddingDTO.getDescription(), convertedEntity.getDescription());
-        assertEquals(bookAddingDTO.getAuthor(), convertedEntity.getAuthor());
+        assertNull(convertedEntity.getId());
+        assertEquals(book.getIsbn(), convertedEntity.getIsbn());
+        assertEquals(book.getTitle(), convertedEntity.getTitle());
+        assertEquals(book.getGenre(), convertedEntity.getGenre());
+        assertEquals(book.getAuthor(), convertedEntity.getAuthor());
+        assertEquals(book.getDescription(), convertedEntity.getDescription());
         assertNull(convertedEntity.getId());
     }
 
@@ -94,7 +94,7 @@ public class BookMapperTest {
         BookInventoryAddingDTO convertedDTO = bookMapper.entityToInventoryAddingDto(book);
 
         assertNotNull(convertedDTO);
-        assertEquals(book.getId(), convertedDTO.getBookId());
+        assertEquals(bookInventoryAddingDTO, convertedDTO);
     }
 
     @Test
