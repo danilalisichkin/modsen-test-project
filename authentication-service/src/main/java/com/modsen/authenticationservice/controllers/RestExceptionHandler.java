@@ -79,7 +79,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(Throwable e) {
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionMessage("some of provided user credentials are invalid or user doesn't exist", "invalid user credentials"));
     }
 
