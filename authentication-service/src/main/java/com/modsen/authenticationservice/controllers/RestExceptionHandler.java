@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -73,6 +74,13 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ExceptionMessage("provided jwt in authorization header of request is expired, please login again", "jwt expired"));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ExceptionMessage("some of provided user credentials are invalid or user doesn't exist", "invalid user credentials"));
     }
 
     @ExceptionHandler(Throwable.class)
