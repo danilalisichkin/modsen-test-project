@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AuthenticationClient {
 
     @GetMapping("/validate")
-    ResponseEntity<String> validateToken(@NotNull @NotEmpty @RequestParam("token") String token);
+    ResponseEntity<Object> validateToken(@NotNull @NotEmpty @RequestParam("token") String token);
 }

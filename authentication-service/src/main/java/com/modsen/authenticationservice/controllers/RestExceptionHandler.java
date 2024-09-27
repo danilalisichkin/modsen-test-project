@@ -22,6 +22,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class RestExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class, UsernameNotFoundException.class, NoResourceFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(Throwable e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -74,6 +75,20 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ExceptionMessage("provided jwt in authorization header of request is expired, please login again", "jwt expired"));
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<Object> handleSignatureException(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionMessage("provided signature of jwt in authorization header of request is invalid", "invalid jwt signature"));
+    }
+
+    @ExceptionHandler({MalformedJwtException.class, UnsupportedJwtException.class})
+    public ResponseEntity<Object> handleInvalidJwtFormat(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionMessage("provided jwt in authorization header of request has invalid format or not supported", "invalid jwt format"));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
