@@ -1,15 +1,26 @@
 package com.modsen.apigateway.controllers.clients;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-@FeignClient(value = "authentication-service", path = "/api/v1/authentication")
-public interface AuthenticationClient {
+@Service
+public class AuthenticationClient {
+    private final WebClient webClient;
 
-    @GetMapping("/validate")
-    ResponseEntity<Object> validateToken(@NotNull @NotEmpty @RequestParam("token") String token);
+    @Autowired
+    public AuthenticationClient(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
+    }
+
+    public Mono<String> validateToken(String token) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/validate")
+                        .queryParam("token", token)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class);
+    }
 }

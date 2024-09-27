@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -57,6 +58,13 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(new ExceptionMessage("the service is temporarily unavailable, please try later again", "internal server error"));
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ExceptionMessage> handleWebClientResponseException(WebClientResponseException e) {
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(e.getResponseBodyAs(ExceptionMessage.class));
     }
 
     @ExceptionHandler(Throwable.class)
