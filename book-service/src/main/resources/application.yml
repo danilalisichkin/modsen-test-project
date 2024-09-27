@@ -12,10 +12,8 @@ spring:
       hibernate:
         default_schema: public
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  security:
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJib29rLXNlcnZpY2UiLCJuYW1lIjoiYW5vbnltb3VzIiwicm9sZSI6Imd1ZXN0IiwiaWF0IjoxNjk1MTM5MjAwLCJhdWQiOiJib29rLXNlcnZpY2UifQ.xIhXTAn0gu_fW7bGmzP2RbGaTPfQaZZ4o3JxXY-FRVE"
 server:
-  port: 0
+  port: 8080
   forward-headers-strategy: framework
 eureka:
   client:
