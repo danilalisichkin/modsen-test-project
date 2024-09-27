@@ -76,6 +76,20 @@ public class RestExceptionHandler {
                 .body(new ExceptionMessage("provided jwt in authorization header of request is expired, please login again", "jwt expired"));
     }
 
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<Object> handleSignatureException(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionMessage("provided signature of jwt in authorization header of request is invalid", "invalid jwt signature"));
+    }
+
+    @ExceptionHandler({MalformedJwtException.class, UnsupportedJwtException.class})
+    public ResponseEntity<Object> handleInvalidJwtFormat(Throwable e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionMessage("provided jwt in authorization header of request has invalid format or not supported", "invalid jwt format"));
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(Throwable e) {
         return ResponseEntity
