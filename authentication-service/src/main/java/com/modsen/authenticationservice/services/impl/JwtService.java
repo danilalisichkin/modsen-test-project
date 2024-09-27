@@ -32,22 +32,10 @@ public class JwtService implements IJwtService {
 
     @Override
     public void validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(jwtAccessKey)
-                    .build()
-                    .parseClaimsJws(token);
-        } catch (ExpiredJwtException e) {
-
-        } catch (UnsupportedJwtException e) {
-
-        } catch (MalformedJwtException e) {
-
-        } catch (SignatureException e) {
-
-        } catch (Exception e) {
-
-        }
+        Jwts.parser()
+                .setSigningKey(jwtAccessKey)
+                .build()
+                .parseClaimsJws(token);
     }
 
     @Override
